@@ -9,8 +9,12 @@ SELECT
 	when age < 60 then '50s'
 	ELSE '60s+'
 	END AS age_group,
-	country_destination, #원하는 컬럼으로 변경
+	signup_method, #원하는 컬럼명
+	case country_destination
+	when 'NDF' then 'NRSV'
+	ELSE 'RSV'
+	END AS reservation, 
 	COUNT(1) AS cnt
 FROM train
-GROUP BY 1, 2
-ORDER BY 1,2
+GROUP BY 1, 2, 3
+ORDER BY 1, 2, 3 desc
