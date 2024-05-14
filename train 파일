@@ -1,0 +1,70 @@
+-- 첫 가입일~첫 예약일 시간차(null 값 미처리)  
+SELECT DATEDIFF(date_first_booking, date_account_created) AS date_difference
+FROM train_filter.train
+ORDER BY date_difference;
+
+-- 첫 가입일~첫 예약일 평균 50일
+SELECT AVG(DATEDIFF(date_first_booking, date_account_created)) AS date_difference
+FROM train_filter.train;
+
+-- 디바이스별 시간차(null 값 미처리)
+SELECT first_device_type, ROUND(AVG(DATEDIFF(date_first_booking, date_account_created))) AS date_difference
+FROM train_filter.train
+GROUP BY first_device_type
+ORDER BY date_difference DESC;
+
+-- 디바이스별 시간차(null 값 처리)
+SELECT 
+    first_device_type, 
+    ROUND(AVG(DATEDIFF(date_first_booking, date_account_created))) AS date_difference
+FROM 
+    train_filter.train
+WHERE 
+    date_account_created IS NOT NULL 
+    AND date_first_booking IS NOT NULL
+GROUP BY 
+    first_device_type
+ORDER BY 
+    date_difference DESC;
+
+-- 윈도우 처음 상호작용한 마케팅(first_affiliate_tracked)
+SELECT first_device_type, first_affiliate_tracked, ROUND(AVG(DATEDIFF(date_first_booking, date_account_created))) AS date_difference
+FROM train_filter.train
+WHERE first_device_type in ('Windows Desktop')
+GROUP BY first_device_type, first_affiliate_tracked
+ORDER BY date_difference DESC;
+
+-- 맥 처음 상호작용한 마케팅(first_affiliate_tracked)
+SELECT first_device_type, first_affiliate_tracked, ROUND(AVG(DATEDIFF(date_first_booking, date_account_created))) AS date_difference
+FROM train_filter.train
+WHERE first_device_type in ('Mac Desktop')
+GROUP BY first_device_type, first_affiliate_tracked
+ORDER BY date_difference DESC;
+
+-- 윈도우 유료 마케팅 종류(affiliate_channel)
+SELECT first_device_type, affiliate_channel, ROUND(AVG(DATEDIFF(date_first_booking, date_account_created))) AS date_difference
+FROM train_filter.train
+WHERE first_device_type in ('Windows Desktop')
+GROUP BY first_device_type, affiliate_channel
+ORDER BY date_difference DESC;
+
+-- 맥 유료 마케팅 종류(affiliate_channel)
+SELECT first_device_type, affiliate_channel, ROUND(AVG(DATEDIFF(date_first_booking, date_account_created))) AS date_difference
+FROM train_filter.train
+WHERE first_device_type in ('Mac Desktop')
+GROUP BY first_device_type, affiliate_channel
+ORDER BY date_difference DESC;
+
+-- 윈도우 마케팅 이루어지는 곳(affiliate_provider)
+SELECT first_device_type, affiliate_provider, ROUND(AVG(DATEDIFF(date_first_booking, date_account_created))) AS date_difference
+FROM train_filter.train
+WHERE first_device_type in ('Windows Desktop')
+GROUP BY first_device_type, affiliate_provider
+ORDER BY date_difference DESC;
+
+-- 맥 마케팅 이루어지는 곳(affiliate_provider)
+SELECT first_device_type, affiliate_provider, ROUND(AVG(DATEDIFF(date_first_booking, date_account_created))) AS date_difference
+FROM train_filter.train
+WHERE first_device_type in ('Mac Desktop')
+GROUP BY first_device_type, affiliate_provider
+ORDER BY date_difference DESC;
