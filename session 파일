@@ -1,0 +1,36 @@
+-- secs_elapsed 피쳐를 초에서 시간 단위로 변환
+SELECT ROUND(secs_elapsed / 3600) as time
+FROM session.sessions;
+
+-- PC 디바이스 & action 관계
+SELECT action, ROUND(SUM(secs_elapsed) / 3600) as timehour
+FROM session.sessions
+WHERE device_type IN ('Mac Desktop', 'Windows Desktop')
+GROUP BY device_type, action
+ORDER BY timehour DESC;
+
+-- MO 디바이스 & action 관계
+SELECT action, ROUND(SUM(secs_elapsed) / 3600) as timehour
+FROM session.sessions
+WHERE device_type IN ('Android App Unknown Phone/Tablet', 'iPhone', 'Android Phone')
+GROUP BY device_type, action
+ORDER BY timehour DESC;
+
+-- action_type 기준
+SELECT action_type, ROUND(SUM(secs_elapsed) / 3600) as timehour
+FROM session.sessions
+GROUP BY action_type
+ORDER BY timehour DESC;
+
+-- action 기준
+SELECT action, ROUND(SUM(secs_elapsed) / 3600) as timehour
+FROM session.sessions
+GROUP BY action
+ORDER BY timehour DESC;
+
+-- action & action_type 관계
+SELECT action, action_type, ROUND(SUM(secs_elapsed) / 3600) as timehour
+FROM session.sessions
+GROUP BY action, action_type
+ORDER BY timehour DESC
+LIMIT 10;
