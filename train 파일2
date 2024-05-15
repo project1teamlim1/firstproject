@@ -1,0 +1,66 @@
+-- 첫 가입일~첫 예약일 시간차 평균 51일 
+SELECT 
+	ROUND(AVG(DATEDIFF(date_first_booking, date_account_created))) AS date_difference
+FROM 
+	train_filter.train
+WHERE 
+    date_first_booking IS NOT NULL
+ORDER BY 
+	date_difference;
+
+-- affiliate_channel 유료 마케팅 종류별 시간차
+SELECT 
+    affiliate_channel, 
+    ROUND(AVG(DATEDIFF(date_first_booking, date_account_created))) AS date_difference
+FROM 
+    train_filter.train
+WHERE 
+    date_first_booking IS NOT NULL
+GROUP BY 
+    affiliate_channel
+ORDER BY 
+    date_difference;
+
+-- first_affiliate_tracked 처음 상호작용 한 마케팅별 시간차
+SELECT 
+    first_affiliate_tracked, 
+    ROUND(AVG(DATEDIFF(date_first_booking, date_account_created))) AS date_difference
+FROM 
+    train_filter.train
+WHERE 
+    date_first_booking IS NOT NULL
+GROUP BY 
+    first_affiliate_tracked
+ORDER BY 
+    date_difference;
+
+-- affiliate_provider 마케팅 상세 경로별 시간차
+SELECT 
+    affiliate_provider, 
+    ROUND(AVG(DATEDIFF(date_first_booking, date_account_created))) AS date_difference
+FROM 
+    train_filter.train
+WHERE 
+    date_first_booking IS NOT NULL
+GROUP BY 
+    affiliate_provider
+HAVING
+    date_difference IS NOT NULL
+ORDER BY 
+    date_difference;
+
+-- 검색 광고 중에서 효율이 우수한 마케팅 상세 경로 
+SELECT 
+    affiliate_channel, affiliate_provider, 
+    ROUND(AVG(DATEDIFF(date_first_booking, date_account_created))) AS date_difference
+FROM 
+    train_filter.train
+WHERE 
+    affiliate_channel IN ('sem-brand', 'sem-non-brand', 'seo')
+    AND date_first_booking IS NOT NULL
+GROUP BY 
+    affiliate_channel, affiliate_provider
+HAVING
+    date_difference IS NOT NULL
+ORDER BY 
+    affiliate_channel, date_difference;
