@@ -1,0 +1,21 @@
+-- date 구간 설정 (direct 행은 제거함)
+WITH diff_date AS (
+    SELECT id,
+           DATEDIFF(date_first_booking, date_account_created) as diff_date,
+           CASE 
+               WHEN (DATEDIFF(date_first_booking, date_account_created) >= 0 AND DATEDIFF(date_first_booking, date_account_created) <= 1) THEN '1day'
+               WHEN (DATEDIFF(date_first_booking, date_account_created) > 1 AND DATEDIFF(date_first_booking, date_account_created) <= 30) THEN '1month'
+               WHEN (DATEDIFF(date_first_booking, date_account_created) > 30 AND DATEDIFF(date_first_booking, date_account_created) <= 90) THEN '3month'
+               WHEN (DATEDIFF(date_first_booking, date_account_created) > 90 AND DATEDIFF(date_first_booking, date_account_created) <= 180) THEN '6month'
+               WHEN (DATEDIFF(date_first_booking, date_account_created) > 180 AND DATEDIFF(date_first_booking, date_account_created) <= 270) THEN '9month'
+               ELSE 'year'
+           END AS interval_date
+    FROM base
+    WHERE DATEDIFF(date_first_booking, date_account_created) >= 0
+)
+SELECT dd.interval_date, b.affiliate_channel, COUNT(*) as count
+FROM diff_date dd
+INNER JOIN base b ON dd.id = b.id
+WHERE b.affiliate_channel != 'direct'
+GROUP BY 1,2
+ORDER BY 1,3 DESC;
