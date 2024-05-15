@@ -4,7 +4,7 @@ SELECT
 FROM 
 	train_filter.train
 WHERE 
-    date_first_booking IS NOT NULL
+    	date_first_booking IS NOT NULL
 ORDER BY 
 	date_difference;
 
