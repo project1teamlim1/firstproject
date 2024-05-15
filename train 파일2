@@ -1,4 +1,4 @@
--- 첫 가입일~첫 예약일 시간차 평균 51일 
+-- 첫 가입일~첫 예약일 시간차 평균 51일(예약일 없는 데이터는 null 값으로 제외) 
 SELECT 
 	ROUND(AVG(DATEDIFF(date_first_booking, date_account_created))) AS date_difference
 FROM 
